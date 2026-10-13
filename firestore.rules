@@ -1,0 +1,190 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default Deny All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'jeema2023@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow get: if isUser(userId) || isAdmin();
+      allow list: if isAdmin();
+      
+      // Patient or Doctor self-registration: user cannot self-assign verified status or admin
+      allow create: if isUser(userId) &&
+        incoming().uid == userId &&
+        incoming().role in ['patient', 'doctor'] &&
+        (
+          (incoming().role == 'patient' && incoming().doctorVerificationStatus == 'unverified') ||
+          (incoming().role == 'doctor' && incoming().doctorVerificationStatus in ['unverified', 'pending'])
+        );
+
+      // Updates: user can change display alias, display name; cannot self-grant verified doctor status
+      allow update: if (isUser(userId) &&
+        incoming().uid == userId &&
+        incoming().role == existing().role &&
+        incoming().doctorVerificationStatus == existing().doctorVerificationStatus) || isAdmin();
+
+      allow delete: if isUser(userId) || isAdmin();
+    }
+
+    // Doctor Profiles (publicly readable directory so patients can find specialists)
+    match /doctorProfiles/{doctorId} {
+      allow read: if true;
+      // Only admin can create or verify doctor profiles
+      allow create: if isAdmin() || (isSignedIn() && incoming().userId == request.auth.uid && incoming().isVerified == false);
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == request.auth.uid &&
+        incoming().isVerified == existing().isVerified // Cannot self-verify
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Doctor Verification Requests (doctors apply, only admin approves)
+    match /doctorVerificationRequests/{requestId} {
+      allow create: if isSignedIn() &&
+        incoming().userId == request.auth.uid &&
+        incoming().status == 'pending';
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Symptom Assessments (Confidential patient medical intakes)
+    match /symptomAssessments/{assessmentId} {
+      allow create: if isSignedIn() &&
+        incoming().patientId == request.auth.uid &&
+        incoming().patientConsentGiven == true;
+      
+      // Patient who authored it, or assigned consulting doctor, or admin
+      allow read: if isSignedIn() && (
+        resource.data.patientId == request.auth.uid ||
+        (resource.data.assignedDoctorId != null && resource.data.assignedDoctorId == request.auth.uid) ||
+        isAdmin()
+      );
+
+      allow update: if isSignedIn() && (
+        (resource.data.patientId == request.auth.uid && incoming().patientId == request.auth.uid) ||
+        isAdmin()
+      );
+
+      allow delete: if isSignedIn() && (resource.data.patientId == request.auth.uid || isAdmin());
+    }
+
+    // Appointments collection
+    match /appointments/{appointmentId} {
+      // Patient or Doctor on the appointment can read
+      allow read: if isSignedIn() && (
+        resource.data.patientId == request.auth.uid ||
+        resource.data.doctorId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Patient can create appointment for themselves
+      allow create: if isSignedIn() &&
+        incoming().patientId == request.auth.uid &&
+        incoming().status in ['pending', 'confirmed'];
+
+      // Controlled updates: Patient can cancel; Doctor can update status
+      allow update: if isSignedIn() && (
+        isAdmin() ||
+        (
+          resource.data.patientId == request.auth.uid &&
+          incoming().patientId == resource.data.patientId &&
+          incoming().doctorId == resource.data.doctorId &&
+          incoming().fee == resource.data.fee &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['status']) &&
+          incoming().status == 'cancelled'
+        ) ||
+        (
+          resource.data.doctorId == request.auth.uid &&
+          incoming().patientId == resource.data.patientId &&
+          incoming().doctorId == resource.data.doctorId &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['status'])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Consultation Summaries (authored by doctor post-consultation)
+    match /consultationSummaries/{summaryId} {
+      allow read: if isSignedIn() && (
+        resource.data.patientId == request.auth.uid ||
+        resource.data.doctorId == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow create: if isSignedIn() &&
+        incoming().doctorId == request.auth.uid;
+
+      allow update: if isSignedIn() && (
+        (resource.data.doctorId == request.auth.uid && incoming().doctorId == request.auth.uid) ||
+        isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Consent Records (patient granting data access to doctor)
+    match /consentRecords/{consentId} {
+      allow create: if isSignedIn() && incoming().patientId == request.auth.uid;
+      allow read: if isSignedIn() && (
+        resource.data.patientId == request.auth.uid ||
+        resource.data.doctorId == request.auth.uid ||
+        isAdmin()
+      );
+      allow update: if false; // immutable audit record
+      allow delete: if isSignedIn() && (resource.data.patientId == request.auth.uid || isAdmin());
+    }
+
+    // Access Audit Logs (system audit trail)
+    match /accessAuditLogs/{logId} {
+      allow create: if isSignedIn() && incoming().actorId == request.auth.uid;
+      allow read: if isAdmin();
+      allow update: if false; // immutable audit record
+      allow delete: if false;
+    }
+
+    // Follow-ups (between patient and doctor)
+    match /followUps/{followUpId} {
+      allow create: if isSignedIn() && incoming().senderId == request.auth.uid;
+      allow read: if isSignedIn() && (
+        resource.data.senderId == request.auth.uid ||
+        resource.data.recipientId == request.auth.uid ||
+        isAdmin()
+      );
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account record containing authentication link and role indicator.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "displayAlias": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["patient", "doctor", "admin"] },
+        "doctorVerificationStatus": { "type": "string", "enum": ["unverified", "pending", "verified", "rejected"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "DoctorProfile": {
+      "title": "DoctorProfile",
+      "description": "Public clinician profile details with verified credentials.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "gender": { "type": "string", "enum": ["Female", "Male", "Other"] },
+        "speciality": { "type": "string", "maxLength": 150 },
+        "qualifications": { "type": "string", "maxLength": 250 },
+        "experienceYears": { "type": "number" },
+        "registrationNumber": { "type": "string", "maxLength": 100 },
+        "medicalCouncil": { "type": "string", "maxLength": 150 },
+        "languages": { "type": "array" },
+        "modes": { "type": "array" },
+        "fee": { "type": "number" },
+        "bio": { "type": "string", "maxLength": 2000 },
+        "focusAreas": { "type": "array" },
+        "isVerified": { "type": "boolean" },
+        "availableToday": { "type": "boolean" },
+        "availableDays": { "type": "array" },
+        "timeSlots": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "name", "speciality", "registrationNumber", "fee", "isVerified"]
+    },
+    "DoctorVerificationRequest": {
+      "title": "DoctorVerificationRequest",
+      "description": "Onboarding verification request submitted by medical practitioner.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "doctorName": { "type": "string", "maxLength": 120 },
+        "medicalCouncil": { "type": "string", "maxLength": 150 },
+        "registrationNumber": { "type": "string", "maxLength": 100 },
+        "qualifications": { "type": "string", "maxLength": 250 },
+        "speciality": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "submittedAt": { "type": "string" },
+        "reviewedAt": { "type": "string" },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "reviewNotes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "userId", "medicalCouncil", "registrationNumber", "status", "submittedAt"]
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Telehealth consultation booking between patient and verified doctor.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "doctorId": { "type": "string", "maxLength": 128 },
+        "doctorName": { "type": "string", "maxLength": 120 },
+        "doctorSpeciality": { "type": "string", "maxLength": 150 },
+        "doctorAvatar": { "type": "string", "maxLength": 500 },
+        "patientId": { "type": "string", "maxLength": 128 },
+        "patientAlias": { "type": "string", "maxLength": 100 },
+        "date": { "type": "string", "maxLength": 50 },
+        "timeSlot": { "type": "string", "maxLength": 50 },
+        "slotKey": { "type": "string", "maxLength": 150 },
+        "mode": { "type": "string", "enum": ["chat", "audio", "video"] },
+        "fee": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
+        "paymentStatus": { "type": "string", "enum": ["simulated_success", "pending", "failed"] },
+        "paymentMethod": { "type": "string", "enum": ["upi_simulated", "card_simulated"] },
+        "symptomAssessmentId": { "type": "string", "maxLength": 128 },
+        "symptomSummaryBrief": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "doctorId", "patientId", "patientAlias", "date", "timeSlot", "slotKey", "mode", "fee", "status", "paymentStatus", "createdAt"]
+    },
+    "SymptomAssessment": {
+      "title": "SymptomAssessment",
+      "description": "Confidential patient guided questionnaire intake.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "patientId": { "type": "string", "maxLength": 128 },
+        "patientAlias": { "type": "string", "maxLength": 100 },
+        "categoryId": { "type": "string", "maxLength": 100 },
+        "conditionId": { "type": "string", "maxLength": 100 },
+        "primaryConcern": { "type": "string", "maxLength": 3000 },
+        "selectedSymptoms": { "type": "array" },
+        "duration": { "type": "string", "maxLength": 100 },
+        "severity": { "type": "string", "enum": ["mild", "moderate", "severe", "disruptive"] },
+        "painScale": { "type": "number" },
+        "priorTreatments": { "type": "string", "maxLength": 1000 },
+        "preferredMode": { "type": "string", "enum": ["chat", "audio", "video"] },
+        "redFlagWarningTriggered": { "type": "boolean" },
+        "redFlagAcknowledged": { "type": "boolean" },
+        "patientConsentGiven": { "type": "boolean" },
+        "assignedDoctorId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "patientId", "categoryId", "primaryConcern", "patientConsentGiven", "createdAt"]
+    },
+    "ConsultationSummary": {
+      "title": "ConsultationSummary",
+      "description": "Clinical summary authored by assigned doctor post-consultation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "appointmentId": { "type": "string", "maxLength": 128 },
+        "doctorId": { "type": "string", "maxLength": 128 },
+        "patientId": { "type": "string", "maxLength": 128 },
+        "patientAlias": { "type": "string", "maxLength": 100 },
+        "diagnosisImpression": { "type": "string", "maxLength": 2000 },
+        "doctorAdvice": { "type": "string", "maxLength": 3000 },
+        "recommendedFollowUpDays": { "type": "number" },
+        "lifestyleModifications": { "type": "array" },
+        "discreetPrescriptionCode": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "appointmentId", "doctorId", "patientId", "diagnosisImpression", "doctorAdvice", "createdAt"]
+    },
+    "FollowUp": {
+      "title": "FollowUp",
+      "description": "Private follow-up query message between patient and assigned clinician.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "appointmentId": { "type": "string", "maxLength": 128 },
+        "senderId": { "type": "string", "maxLength": 128 },
+        "senderRole": { "type": "string", "enum": ["patient", "doctor"] },
+        "recipientId": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "appointmentId", "senderId", "senderRole", "recipientId", "message", "createdAt"]
+    },
+    "ConsentRecord": {
+      "title": "ConsentRecord",
+      "description": "Auditable patient record granting consultation data access to clinician.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "patientId": { "type": "string", "maxLength": 128 },
+        "doctorId": { "type": "string", "maxLength": 128 },
+        "appointmentId": { "type": "string", "maxLength": 128 },
+        "assessmentId": { "type": "string", "maxLength": 128 },
+        "scope": { "type": "string", "maxLength": 250 },
+        "consentedAt": { "type": "string" }
+      },
+      "required": ["id", "patientId", "doctorId", "scope", "consentedAt"]
+    },
+    "AccessAuditLog": {
+      "title": "AccessAuditLog",
+      "description": "Audit record tracking access to confidential sensitive clinical documents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "actorId": { "type": "string", "maxLength": 128 },
+        "actorRole": { "type": "string", "maxLength": 50 },
+        "targetPath": { "type": "string", "maxLength": 250 },
+        "action": { "type": "string", "maxLength": 100 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "actorId", "actorRole", "targetPath", "action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user authentication and role assignments."
+    },
+    "/doctorProfiles/{doctorId}": {
+      "schema": { "$ref": "#/entities/DoctorProfile" },
+      "description": "Public verified clinician profiles."
+    },
+    "/doctorVerificationRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/DoctorVerificationRequest" },
+      "description": "Submissions by medical practitioners awaiting administrator verification."
+    },
+    "/appointments/{appointmentId}": {
+      "schema": { "$ref": "#/entities/Appointment" },
+      "description": "Scheduled telehealth appointments."
+    },
+    "/symptomAssessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/SymptomAssessment" },
+      "description": "Confidential patient symptom intakes."
+    },
+    "/consultationSummaries/{summaryId}": {
+      "schema": { "$ref": "#/entities/ConsultationSummary" },
+      "description": "Clinician-authored post-consultation reports."
+    },
+    "/followUps/{followUpId}": {
+      "schema": { "$ref": "#/entities/FollowUp" },
+      "description": "Post-consultation follow-up notes."
+    },
+    "/consentRecords/{consentId}": {
+      "schema": { "$ref": "#/entities/ConsentRecord" },
+      "description": "Patient consent declarations for clinician data access."
+    },
+    "/accessAuditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AccessAuditLog" },
+      "description": "Auditable access logs for sensitive patient records."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "GuptCare",
+  "description": "Private, compassionate telehealth consultations for sensitive and intimate health concerns. Verified doctors, discreet care, zero judgment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
