@@ -409,11 +409,11 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
 export const FREQUENTLY_ASKED_QUESTIONS = [
   {
     q: 'Will anyone find out about my consultation?',
-    a: 'No. GuptCare is engineered specifically for privacy. You can choose a pseudonymous display alias (e.g., "Patient Jordan"), and your financial statement will show a discreet medical charge ("GC Health Care") without naming sensitive conditions or specialties. Video consultations offer optional camera-off mode.'
+    a: 'No. Nivara is engineered specifically for privacy. You can choose a pseudonymous display alias (e.g., "Patient Jordan"), and your financial statement will show a discreet medical charge ("Nivara Health Care") without naming sensitive conditions or specialties. Video consultations offer optional camera-off mode.'
   },
   {
     q: 'Are the doctors certified and registered?',
-    a: 'Every clinician on GuptCare holds active medical council registration (MCI/NMC or State Medical Councils) with verified postgraduate degrees (MS, MCh, MD, DNB) in colorectal surgery, urology, gynecology, or dermatology. Their registration numbers are openly auditable.'
+    a: 'Every clinician on Nivara holds active medical council registration (MCI/NMC or State Medical Councils) with verified postgraduate degrees (MS, MCh, MD, DNB) in colorectal surgery, urology, gynecology, or dermatology. Their registration numbers are openly auditable.'
   },
   {
     q: 'Can piles or fissures be treated without surgery?',
@@ -424,11 +424,11 @@ export const FREQUENTLY_ASKED_QUESTIONS = [
     a: 'You have full control. You can choose Encrypted Text Chat or Voice Call where no camera is needed. If you choose Video, your camera can remain off until you feel completely comfortable, and visual examination is always optional and conducted with strict medical ethics.'
   },
   {
-    q: 'How does GuptCare differ from general doctor apps?',
-    a: 'General platforms mix everything from coughs and colds to gym supplements. GuptCare exclusively focuses 100% on sensitive and intimate health concerns. Our doctors are specially trained in empathetic, non-stigmatizing clinical communication so you never feel judged.'
+    q: 'How does Nivara differ from general doctor apps?',
+    a: 'General platforms mix everything from coughs and colds to gym supplements. Nivara exclusively focuses 100% on sensitive and intimate health concerns. Our doctors are specially trained in empathetic, non-stigmatizing clinical communication so you never feel judged.'
   },
   {
     q: 'What should I do if my symptoms are an emergency?',
-    a: 'GuptCare is an outpatient telehealth platform and NOT an emergency service. If you experience massive bright red or dark blood loss, sudden severe scrotal pain with vomiting, inability to pass urine for over 8 hours, or fever above 102°F with severe pelvic pain, immediately go to an emergency hospital room or call 112 / 911.'
+    a: 'Nivara is an outpatient telehealth platform and NOT an emergency service. If you experience massive bright red or dark blood loss, sudden severe scrotal pain with vomiting, inability to pass urine for over 8 hours, or fever above 102°F with severe pelvic pain, immediately go to an emergency hospital room or call 112 / 911.'
   }
 ];

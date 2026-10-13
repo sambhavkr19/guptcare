@@ -42,7 +42,7 @@ export const AISymptomCompanion: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      text: 'Namaste & Welcome to GuptCare Confidential Intake. I am your private AI Symptom Companion. You can type in English, Hindi, or Hinglish without any embarrassment or fear of judgment. What discomfort or symptom have you been experiencing?',
+      text: 'Namaste & Welcome to Nivara Confidential Intake. I am your private AI Symptom Companion. You can type in English, Hindi, or Hinglish without any embarrassment or fear of judgment. What discomfort or symptom have you been experiencing?',
       time: 'Just now'
     }
   ]);
@@ -222,7 +222,7 @@ export const AISymptomCompanion: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-sm text-[#112F2B]">GuptCare AI Symptom Companion</h3>
+                <h3 className="font-bold text-sm text-[#112F2B]">Nivara AI Symptom Companion</h3>
                 <span className="text-[10px] bg-emerald-100 text-[#0E4D45] font-semibold px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
                   <Sparkles className="w-2.5 h-2.5" />
                   Gemini-Powered

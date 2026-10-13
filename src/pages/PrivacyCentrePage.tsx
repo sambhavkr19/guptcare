@@ -59,7 +59,7 @@ export const PrivacyCentrePage: React.FC = () => {
             <span>Confidentiality &amp; Consent</span>
           </div>
           <h1 className="text-3xl font-bold text-[#112F2B] tracking-tight">
-            GuptCare Privacy Centre
+            Nivara Privacy Centre
           </h1>
           <p className="text-xs sm:text-sm text-[#4E6761] mt-1.5 leading-relaxed">
             Transparent explanations of what data is collected, how it is handled, and practical controls to manage your privacy footprint.

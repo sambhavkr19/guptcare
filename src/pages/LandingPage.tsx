@@ -160,7 +160,7 @@ export const LandingPage: React.FC = () => {
             Comprehensive Care for Sensitive Concerns
           </h2>
           <p className="text-sm text-[#4E6761] mt-2">
-            GuptCare is focused 100% on conditions that carry unfair social stigma. We do not dilute our expertise with general colds, fevers, or unrelated clinical categories.
+            Nivara is focused 100% on conditions that carry unfair social stigma. We do not dilute our expertise with general colds, fevers, or unrelated clinical categories.
           </p>
         </div>
 
@@ -322,7 +322,7 @@ export const LandingPage: React.FC = () => {
                 Designed From Scratch for Complete Confidentiality
               </h2>
               <p className="text-sm text-[#9BB5AD] leading-relaxed mb-6">
-                Most people delay seeking help for piles, sexual concerns, or intimate rashes for months or years due to shame. We engineered GuptCare so you never have to choose between your dignity and your health.
+                Most people delay seeking help for piles, sexual concerns, or intimate rashes for months or years due to shame. We engineered Nivara so you never have to choose between your dignity and your health.
               </p>
 
               <div className="space-y-3 text-xs text-[#BDD3CC]">
@@ -365,7 +365,7 @@ export const LandingPage: React.FC = () => {
                   &quot;Over 60% of adults experience an anorectal or intimate health concern during their lifetime. Early medical intervention prevents painful complications in the vast majority of cases.&quot;
                 </blockquote>
                 <span className="block text-[11px] text-emerald-300/80 font-medium mt-2">
-                  — GuptCare Clinical Board
+                  — Nivara Clinical Board
                 </span>
               </div>
               <button

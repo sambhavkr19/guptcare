@@ -126,7 +126,7 @@ app.post('/api/symptom-companion', async (req, res) => {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const systemPrompt = `You are the GuptCare AI Symptom Intake Companion—a specialized, deeply empathetic clinical triage assistant for sensitive and intimate health concerns (anorectal issues like piles/fissures, sexual health, genital/urinary problems, women's intimate health, and genital dermatology).
+    const systemPrompt = `You are the Nivara AI Symptom Intake Companion—a specialized, deeply empathetic clinical triage assistant for sensitive and intimate health concerns (anorectal issues like piles/fissures, sexual health, genital/urinary problems, women's intimate health, and genital dermatology).
 
 CLINICAL GUIDELINES & SENSITIVITY:
 1. Patients feel immense embarrassment, shame, and anxiety. Speak with maximum warmth, dignity, and clinical respect.
@@ -356,7 +356,7 @@ app.post('/api/consultation-chat', async (req, res) => {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const systemPrompt = `You are ${doctorName || 'Dr. Ananya Sharma'}, a senior board-certified medical specialist in ${doctorSpeciality || 'Proctology & Intimate Health'} at GuptCare.
+    const systemPrompt = `You are ${doctorName || 'Dr. Ananya Sharma'}, a senior board-certified medical specialist in ${doctorSpeciality || 'Proctology & Intimate Health'} at Nivara.
 You are in a live, highly confidential telehealth consultation with ${patientAlias || 'the patient'}.
 Patient's reported clinical concern: "${symptomBrief || 'Intimate health discomfort'}".
 
@@ -418,5 +418,5 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`GuptCare server listening on port ${PORT}`);
+  console.log(`Nivara server listening on port ${PORT}`);
 });

@@ -297,7 +297,7 @@ export const PatientDashboardPage: React.FC = () => {
                 Digital Prescriptions &amp; Clinical Management Notes
               </h3>
               <p className="text-xs text-[#526B64] mb-6">
-                All clinical records generated on GuptCare are issued under strict privacy. They do not leak into public health registries unless you explicitly export them.
+                All clinical records generated on Nivara are issued under strict privacy. They do not leak into public health registries unless you explicitly export them.
               </p>
 
               {pastApts.map(apt => (

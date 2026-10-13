@@ -27,7 +27,7 @@ export interface SafetyEvaluationResult {
 
 /**
  * Clinician-Reviewed Safety Screening Rules (Version 2.1)
- * Reviewed by Clinical Advisory Board for GuptCare Telehealth Protocols
+ * Reviewed by Clinical Advisory Board for Nivara Telehealth Protocols
  */
 export const CLINICAL_SAFETY_RULES: ClinicalSafetyRule[] = [
   // 1. ANORECTAL / COLORECTAL RED FLAGS

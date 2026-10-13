@@ -41,7 +41,7 @@ export const Header: React.FC = () => {
             <Shield className="w-4 h-4 text-emerald-200" />
           </div>
           <span className="text-xl font-bold tracking-tight text-[#133832] whitespace-nowrap shrink-0">
-            GuptCare
+            Nivara
           </span>
         </button>
 

@@ -435,7 +435,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logOut = async () => {
     await signOut(auth);
     setUserProfile(null);
-    showToast('Signed out of GuptCare safely.');
+    showToast('Signed out of Nivara safely.');
   };
 
   const submitVerificationRequest = async (req: Omit<DoctorVerificationRequestDoc, 'id' | 'userId' | 'status' | 'submittedAt'>) => {

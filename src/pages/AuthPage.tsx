@@ -125,7 +125,7 @@ export const AuthPage: React.FC = () => {
               <ShieldCheck className="w-5 h-5 text-emerald-200" />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-[#112F2B]">
-              {authMode === 'signin' ? 'Sign In to GuptCare' :
+              {authMode === 'signin' ? 'Sign In to Nivara' :
                authMode === 'register' ? 'Create Private Account' :
                'Discreet Password Recovery'}
             </h1>

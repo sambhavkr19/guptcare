@@ -369,7 +369,7 @@ export const AppointmentBookingPage: React.FC = () => {
                   <span className="font-semibold text-[#112F2B]">₹{finalFee}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>GuptCare Privacy Encryption</span>
+                  <span>Nivara Privacy Encryption</span>
                   <span className="font-semibold text-emerald-800">Free</span>
                 </div>
                 <div className="flex justify-between">

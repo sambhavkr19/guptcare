@@ -11,7 +11,7 @@ export const EmergencyDisclaimer: React.FC<{ compact?: boolean }> = ({ compact =
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-[#C05621] shrink-0" />
             <span>
-              <strong>Medical Safety Notice:</strong> GuptCare is not for acute medical emergencies. If you have severe bleeding, sudden acute scrotal/pelvic pain, or high fever, seek immediate in-person ER care.
+              <strong>Medical Safety Notice:</strong> Nivara is not for acute medical emergencies. If you have severe bleeding, sudden acute scrotal/pelvic pain, or high fever, seek immediate in-person ER care.
             </span>
           </div>
           <button
@@ -56,7 +56,7 @@ export const EmergencyDisclaimer: React.FC<{ compact?: boolean }> = ({ compact =
               Medical Disclaimer & Emergency Protocol
             </h4>
             <p className="text-xs text-[#7A4018] mt-1 leading-relaxed">
-              GuptCare provides outpatient clinical telehealth for sensitive and intimate concerns. It does not replace emergency hospital services or acute surgical evaluation. Never delay seeking urgent physical care for acute, deteriorating symptoms.
+              Nivara provides outpatient clinical telehealth for sensitive and intimate concerns. It does not replace emergency hospital services or acute surgical evaluation. Never delay seeking urgent physical care for acute, deteriorating symptoms.
             </p>
           </div>
         </div>

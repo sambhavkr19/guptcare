@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
               <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white">
                 <Shield className="w-3.5 h-3.5" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-white">GuptCare</span>
+              <span className="text-xl font-bold tracking-tight text-white">Nivara</span>
             </div>
             <p className="text-sm text-[#A8BCB6] font-medium">
               &quot;Your Health. Your Privacy. No Judgment.&quot;
@@ -135,7 +135,7 @@ export const Footer: React.FC = () => {
         {/* Bottom copyright & disclaimer */}
         <div className="mt-12 pt-6 border-t border-[#1C3632] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#7A958E] gap-4">
           <p>
-            &copy; {new Date().getFullYear()} GuptCare Telehealth Technologies. All clinical data presented are fictional sample scenarios for demonstration.
+            &copy; {new Date().getFullYear()} Nivara Telehealth Technologies. All clinical data presented are fictional sample scenarios for demonstration.
           </p>
           <div className="flex items-center gap-4">
             <button onClick={() => navigateTo('privacy')} className="hover:text-white">Confidentiality Policy</button>

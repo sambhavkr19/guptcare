@@ -513,7 +513,7 @@ export const GuidedIntakePage: React.FC = () => {
                         className="accent-[#0E4D45] rounded mt-0.5 cursor-pointer"
                       />
                       <span className="text-xs font-semibold text-amber-950">
-                        I understand that GuptCare strongly recommends immediate in-person emergency medical care for these symptoms, and I acknowledge this warning before consulting online.
+                        I understand that Nivara strongly recommends immediate in-person emergency medical care for these symptoms, and I acknowledge this warning before consulting online.
                       </span>
                     </label>
                   </div>
