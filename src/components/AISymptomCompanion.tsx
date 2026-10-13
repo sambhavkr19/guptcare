@@ -120,8 +120,8 @@ export const AISymptomCompanion: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.apiKeyMissing && data.apiKeyNotice) {
-          setApiKeyNotice(data.apiKeyNotice);
+        if (data.serviceNotice || data.apiKeyNotice) {
+          setApiKeyNotice(data.serviceNotice || data.apiKeyNotice);
         }
 
         const assistantReplyText = data.assistantReply || 'Thank you for sharing. Could you tell me more about how long this has been happening?';

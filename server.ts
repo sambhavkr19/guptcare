@@ -17,6 +17,7 @@ const PORT = 3000;
 // Deterministic Server-side Red Flag Keyword Screener
 function evaluateServerSideSafety(text: string, symptoms: string[] = []): {
   isEmergency: boolean;
+  isUrgent: boolean;
   emergencyReason: string | null;
   recommendedAction: string | null;
 } {
@@ -25,11 +26,12 @@ function evaluateServerSideSafety(text: string, symptoms: string[] = []): {
   // Testicular torsion emergency
   if (
     (combined.includes('testic') || combined.includes('scrot') || combined.includes('andkosh')) &&
-    (combined.includes('sudden') || combined.includes('vomit') || combined.includes('severe') || combined.includes('tez dard') || combined.includes('acute'))
+    (combined.includes('sudden') || combined.includes('vomit') || combined.includes('severe') || combined.includes('unbearable') || combined.includes('tez dard') || combined.includes('acute') || combined.includes('swelling'))
   ) {
     return {
       isEmergency: true,
-      emergencyReason: 'Sudden acute one-sided testicular pain may indicate testicular torsion, a surgical emergency where the blood supply to the testicle must be restored within 6 hours.',
+      isUrgent: true,
+      emergencyReason: 'Sudden acute one-sided testicular or scrotal pain may indicate testicular torsion, a critical surgical emergency where blood flow must be restored within 6 hours to prevent tissue necrosis.',
       recommendedAction: 'Do not wait for an online appointment. Proceed immediately to the nearest hospital emergency room.'
     };
   }
@@ -37,23 +39,38 @@ function evaluateServerSideSafety(text: string, symptoms: string[] = []): {
   // Massive continuous rectal bleeding
   if (
     (combined.includes('blood') || combined.includes('bleed') || combined.includes('khoon')) &&
-    (combined.includes('continuous') || combined.includes('clot') || combined.includes('dizzy') || combined.includes('faint') || combined.includes('chakkar') || combined.includes('soaked'))
+    (combined.includes('continuous') || combined.includes('clot') || combined.includes('dizzy') || combined.includes('faint') || combined.includes('chakkar') || combined.includes('soaked') || combined.includes('massive') || combined.includes('black stool') || combined.includes('tarry'))
   ) {
     return {
       isEmergency: true,
-      emergencyReason: 'Continuous rectal bleeding or passing large blood clots with dizziness suggests acute blood loss that requires urgent in-person medical evaluation.',
+      isUrgent: true,
+      emergencyReason: 'Continuous rectal bleeding or passing large blood clots with dizziness suggests acute blood loss or hemodynamic instability that requires urgent in-person medical evaluation.',
       recommendedAction: 'Visit an emergency healthcare centre immediately or call 112.'
+    };
+  }
+
+  // Acute perianal abscess with systemic infection / sepsis warning
+  if (
+    (combined.includes('perianal') || combined.includes('anal') || combined.includes('piles') || combined.includes('rectal')) &&
+    (combined.includes('high fever') || combined.includes('chills') || combined.includes('shivering') || combined.includes('unable to sit') || combined.includes('foul smelling pus') || combined.includes('spreading red'))
+  ) {
+    return {
+      isEmergency: true,
+      isUrgent: true,
+      emergencyReason: 'Perianal swelling accompanied by high fever, chills, and spreading redness indicates a potential ischiorectal or deep perianal abscess requiring urgent surgical drainage.',
+      recommendedAction: 'Seek immediate evaluation at an emergency surgical unit or hospital.'
     };
   }
 
   // Acute urinary retention
   if (
     (combined.includes('urine') || combined.includes('peshab') || combined.includes('urinate')) &&
-    (combined.includes('cannot pass') || combined.includes('unable to') || combined.includes('8 hours') || combined.includes('bursting') || combined.includes('ruk gaya'))
+    (combined.includes('cannot pass') || combined.includes('unable to') || combined.includes('8 hours') || combined.includes('bursting') || combined.includes('ruk gaya') || combined.includes('blocked'))
   ) {
     return {
       isEmergency: true,
-      emergencyReason: 'Inability to pass urine for more than 8 hours despite the urge is acute urinary retention, requiring immediate emergency catheterization to protect bladder and kidney function.',
+      isUrgent: true,
+      emergencyReason: 'Inability to pass urine for hours despite the urge is acute urinary retention, requiring immediate emergency catheterization to protect bladder and kidney function.',
       recommendedAction: 'Go to your nearest hospital emergency department immediately.'
     };
   }
@@ -65,12 +82,26 @@ function evaluateServerSideSafety(text: string, symptoms: string[] = []): {
   ) {
     return {
       isEmergency: true,
-      emergencyReason: 'An erection lasting more than 4 hours is an ischemic emergency that can cause permanent tissue damage without prompt in-person urological decompression.',
-      recommendedAction: 'Seek immediate emergency hospital care.'
+      isUrgent: true,
+      emergencyReason: 'An erection lasting more than 4 hours is an ischemic emergency that can cause permanent cavernosal tissue fibrosis and impotence without prompt in-person urological decompression.',
+      recommendedAction: 'Seek immediate emergency urological hospital care.'
     };
   }
 
-  return { isEmergency: false, emergencyReason: null, recommendedAction: null };
+  // Acute pelvic agony with fainting / bleeding (ectopic or ruptured cyst warning)
+  if (
+    (combined.includes('pelvic') || combined.includes('lower abdomen') || combined.includes('vaginal')) &&
+    (combined.includes('faint') || combined.includes('dizzy') || combined.includes('shoulder pain') || combined.includes('severe sharp pain') || combined.includes('sudden agonizing'))
+  ) {
+    return {
+      isEmergency: true,
+      isUrgent: true,
+      emergencyReason: 'Sudden severe pelvic pain with fainting or dizziness is a clinical emergency indicating potential internal hemorrhage or ruptured pelvic pathology.',
+      recommendedAction: 'Proceed immediately to the nearest maternity/gynaecology emergency department or call 112.'
+    };
+  }
+
+  return { isEmergency: false, isUrgent: false, emergencyReason: null, recommendedAction: null };
 }
 
 // ==========================================
@@ -83,12 +114,12 @@ app.post('/api/symptom-companion', async (req, res) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
 
-    // If API key is missing or default placeholder, provide intelligent clinical fallback
+    // If API key is missing or default placeholder, explain required setup truthfully
     if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
       const fallbackResponse = generateClinicalCompanionFallback(message, chatHistory, currentReport, safetyCheck);
       return res.json({
         apiKeyMissing: true,
-        apiKeyNotice: 'GEMINI_API_KEY not configured. Running local clinical companion engine.',
+        serviceNotice: 'GEMINI_API_KEY is not configured in the server environment. To enable cloud Gemini API, configure a valid GEMINI_API_KEY secret in your server environment variables. The local clinical intake engine is active for fallback intake.',
         ...fallbackResponse
       });
     }
@@ -169,8 +200,10 @@ You MUST respond with valid JSON ONLY (no markdown fences, no extra text) matchi
       assistantReply: parsed.assistantReply,
       structuredReport: parsed.structuredReport
     });
-  } catch (error) {
-    console.error('Gemini symptom companion error:', error);
+  } catch (error: any) {
+    console.error('Gemini symptom companion error:', error?.message || error);
+    const errMsg = error?.message || '';
+    const isModelUnavailable = errMsg.includes('503') || errMsg.includes('UNAVAILABLE') || errMsg.includes('404') || errMsg.includes('demand');
     const fallbackResponse = generateClinicalCompanionFallback(
       req.body.message || '',
       req.body.chatHistory || [],
@@ -180,6 +213,9 @@ You MUST respond with valid JSON ONLY (no markdown fences, no extra text) matchi
     return res.json({
       apiKeyMissing: false,
       errorOccurred: true,
+      serviceNotice: isModelUnavailable
+        ? 'Gemini 3.8 Flash model is currently experiencing upstream high demand / temporary cloud rate limits. The local clinical intake engine is active so you can proceed smoothly without losing symptom data.'
+        : `Upstream AI service status: ${errMsg || 'Temporary service error'}. Local clinical intake engine is active.`,
       ...fallbackResponse
     });
   }
@@ -270,13 +306,39 @@ function generateClinicalCompanionFallback(
 // FEATURE 2: CLINICAL SAFETY SCREENING ROUTE
 // ==========================================
 app.post('/api/safety-screening', (req, res) => {
-  const { description = '', symptoms = [], categoryId = '' } = req.body;
-  const safety = evaluateServerSideSafety(description, symptoms);
+  const { description = '', text = '', message = '', symptoms = [], categoryId = '', painScale } = req.body;
+  const combinedDesc = description || text || message || '';
+  const safety = evaluateServerSideSafety(combinedDesc, symptoms);
+
+  // Severe pain scale check
+  const painNum = Number(painScale);
+  const isExtremePain = !isNaN(painNum) && painNum >= 9;
+
+  const isEmergency = safety.isEmergency;
+  const isUrgent = isExtremePain || safety.isUrgent;
+
+  let urgencyLevel: 'emergency' | 'urgent_in_person' | 'routine' = 'routine';
+  let reason = safety.emergencyReason;
+  let action = safety.recommendedAction;
+
+  if (isEmergency) {
+    urgencyLevel = 'emergency';
+  } else if (isUrgent) {
+    urgencyLevel = 'urgent_in_person';
+    if (!reason && isExtremePain) {
+      reason = 'Reported extreme pain intensity (scale 9-10/10) warrants physical palpation and urgent clinical evaluation.';
+      action = 'Please visit an urgent in-person healthcare clinic for hands-on examination and acute pain management.';
+    }
+  }
+
   return res.json({
-    isSafeForTelehealth: !safety.isEmergency,
-    urgencyLevel: safety.isEmergency ? 'emergency' : 'routine',
-    emergencyReason: safety.emergencyReason,
-    recommendedAction: safety.recommendedAction
+    isSafeForTelehealth: !isEmergency && !isUrgent,
+    urgencyLevel,
+    emergencyReason: reason,
+    recommendedAction: action,
+    safetyNotice: isEmergency || isUrgent
+      ? reason
+      : 'No acute emergency warning signs detected in current description. Routine clinician consultation can proceed, though virtual screening does not guarantee the absence of underlying conditions.'
   });
 });
 
